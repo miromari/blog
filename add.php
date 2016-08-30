@@ -1,5 +1,7 @@
 <?php
 
+$error = '';
+
 if(count($_POST) > 0){
 
 
