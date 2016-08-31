@@ -1,10 +1,18 @@
 <?php
 
+include_once ('function.php');
+
+// Проверка авторизации
+is_loggedIn();
+
 if(count($_POST) > 0){
 
+    //Проверки, что поля заполнены, название  - уникальное и состоит из цифр
+    //!!!Добавить проверку/обработку на запрещенные символы
 
     $title = trim($_POST['title']);
     $content = trim($_POST['content']);
+    $error = '';
 
     if ($title == '' ||  $content == '' ){
         $error = 'Все поля должны быть заполнены!';
@@ -31,6 +39,8 @@ else{
     $content = '';
     $error = '';
 }
+
+  
 ?>
 <!doctype html>
 <html>
@@ -45,6 +55,8 @@ else{
 		Содержимое файла<br>
 		<textarea name="content"> <? echo $content ?></textarea><br>
 		<input type="submit" value="Сохранить"><br>
-	</form>
+	</form><hr>
+
+    <a href="login.php">Выйти</a>
 </body>
 </html>

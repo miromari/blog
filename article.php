@@ -5,6 +5,8 @@
             - $fname !=
             - файл есть file_exists
             - файл не папка
+
+         !!!!Добавить - полный запрет ../   
         */
 
         if($fname != '' && file_exists("data/$fname") && is_file("data/$fname") ){

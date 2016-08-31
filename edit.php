@@ -1,4 +1,7 @@
 <?php
+include_once ('function.php');
+
+is_loggedIn();
 
 if(count($_POST) > 0){
 
@@ -62,6 +65,8 @@ else{
 		Содержимое файла<br>
 		<textarea name="content"> <? echo $content ?></textarea><br>
 		<input type="submit" value="Сохранить"><br>
-	</form>
+	</form><hr>
+
+    <a href="login.php">Выйти</a>
 </body>
 </html>
