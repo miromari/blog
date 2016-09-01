@@ -1,17 +1,18 @@
 <?php
         $fname = $_GET['f'];
+        $path = "data/$fname";
 
         /* проверки:
             - $fname !=
             - файл есть file_exists
             - файл не папка
 
-         !!!!Добавить - полный запрет ../   
+         !!!!Нужно добавить полный запрет '../'  
         */
 
-        if($fname != '' && file_exists("data/$fname") && is_file("data/$fname") ){
+        if($fname != '' && file_exists($path) && is_file($path) ){
 
-            $text = file_get_contents("data/$fname");
+            $text = file_get_contents($path);
             echo '<h1>' . $fname . '</h1>';
             echo '<p>' . $text . '</p>';
         }
