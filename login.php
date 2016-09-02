@@ -1,9 +1,13 @@
 <?php
 	session_start();
     
+//     echo '<pre>';
+// echo print_r($_SESSION);
+// echo '</pre>';  
+
     $login = '';
     $password = '';
-
+var_dump($_SESSION['back']);
 	if(count($_POST) > 0){
         
        $login = $_POST['login'];
@@ -13,22 +17,28 @@
             
             $_SESSION['auth'] = true;
             
-            // если стоит галочка
-            // можем кунить куку? login pass
-
-            if ( $_POST['remember'] == 'on'  ){
+            // если стоит галочка                       
+                if (isset( $_POST['remember'])){
                 setcookie('login', $login, time() + 3600 * 24 * 7);
-                setcookie('password', $password, time() + 3600 * 24 * 7);
+                setcookie('password', md5($password), time() + 3600 * 24 * 7);
             } 
             
-            header('Location: index.php');
+            if (isset($_SESSION['back'])){
+               $back = $_SESSION['back'];
+                header("Location: $back");  
+            }
+            else{
+               header('Location: index.php');   
+            }
             exit();
         }
     }
     else{
         unset($_SESSION['auth']);
-        setcookie('login', $login, time()-1);
-        setcookie('password', $password, time()-1);
+        unset($_SESSION['back']);
+        setcookie('login', '', time()-1);
+        setcookie('password', '', time()-1);
+
     }
 ?>
 <!doctype html>
@@ -44,7 +54,8 @@
         	Пароль<br>
         	<input type="text" name="password" value = "<? echo $password ?>"><br>
         	<input type="checkbox" name="remember">Запомнить меня
-        	<input type="submit" value="Войти">
+        	<input type="submit" value="Войти"><br>
+            <a href = "index.php">К списку новостей</a>
         </form>
     </body>
 </html>

@@ -30,7 +30,7 @@
     <title>Страница новости</title>
 </head>
 <body>
-    <a href = "edit.php?f=<? echo $fname?>">Редактировать</a><br>
+    <hr><a href = "edit.php?f=<? echo $fname?>">Редактировать</a> | 
     <a href = "index.php">К списку новостей</a>
 </body>
 </html>

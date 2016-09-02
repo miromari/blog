@@ -1,9 +1,19 @@
 <?php
 
+// echo '<pre>';
+// echo print_r($_SERVER);
+// echo '</pre>';  
 include_once ('function.php');
 
-// Проверка авторизации
-is_loggedIn();
+session_start();
+
+//Проверка авторизации
+if (!is_auth()){
+    $_SESSION['back'] = $_SERVER[REQUEST_URI];
+    header('Location: login.php');
+    exit(); 
+}
+
 
 if(count($_POST) > 0){
 
@@ -28,7 +38,7 @@ if(count($_POST) > 0){
 
     else {
         file_put_contents("data/$title", $content);
-        header ("Location: index.php");
+        header ("Location: article.php?f=$title");
         exit();
     }
     echo "<p>$error</p>";
