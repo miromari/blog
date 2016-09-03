@@ -18,5 +18,6 @@ function is_auth(){
 }
 
 
-//сделать Clean
+// clean
 
+// validate

@@ -2,10 +2,11 @@
 include_once ('function.php');
 
 session_start();
+$_SESSION['back'] = $_SERVER[REQUEST_URI];
+
 
 //Проверка авторизации
 if (!is_auth()){
-    // $_SESSION['back'] = $_SERVER[REQUEST_URI];
     header('Location: login.php');
     exit(); 
 }
@@ -47,7 +48,7 @@ $fname = $_GET['f'];
             exit();   
         }
 
-        //Выводим ошибку
+        //Выводим ошибку в случае ее наличия
         echo "<p>$error</p>";
 
     }
