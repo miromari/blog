@@ -9,7 +9,7 @@ session_start();
 
 //Проверка авторизации
 if (!is_auth()){
-    $_SESSION['back'] = $_SERVER[REQUEST_URI];
+    // $_SESSION['back'] = $_SERVER[REQUEST_URI];
     header('Location: login.php');
     exit(); 
 }
