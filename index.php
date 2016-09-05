@@ -5,7 +5,10 @@
 </head>
 <body>
     <?php
+        include_once ('function.php');
         session_start();
+        $_SESSION['back'] = $_SERVER[REQUEST_URI];
+        $auth = is_auth();
 
         $news = scandir('data');
 
@@ -19,6 +22,7 @@
         }
     ?>
 
-    <a href = "add.php">Добавить новость</a>
+    <a href = "add.php">Добавить новость</a><br>
+    <a href="login.php"><? echo ($auth ? 'Выйти':'Войти');?></a>
 </body>
 </html>

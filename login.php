@@ -1,10 +1,5 @@
 <?php
-	session_start();
-
- // var_dump(isset($_SERVER[HTTP_REFERER]));
-// echo '<pre>';
-// echo print_r($_SERVER);
-// echo '</pre>';  
+	session_start(); 
 
     $login = '';
     $password = '';
@@ -42,7 +37,7 @@
         setcookie('login', '', time()-1);
         setcookie('password', '', time()-1);
 
-        // Если иы пришли на логин с нуля - удаляем старую отметку back
+        // Если мы пришли на логин с нуля - удаляем старую отметку back
          if (!isset($_SERVER[HTTP_REFERER])){
             unset($_SESSION['back']);
         }

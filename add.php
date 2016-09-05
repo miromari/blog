@@ -1,8 +1,6 @@
 <?php
 
-// echo '<pre>';
-// echo print_r($_SERVER);
-// echo '</pre>';  
+
 include_once ('function.php');
 
 session_start();
@@ -66,7 +64,7 @@ else{
 		<textarea name="content"> <? echo $content ?></textarea><br>
 		<input type="submit" value="Сохранить"><br>
 	</form><hr>
-
+    <a href = "index.php">К списку новостей</a><br>
     <a href="login.php">Выйти</a>
 </body>
 </html>

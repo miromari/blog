@@ -1,73 +1,71 @@
 <?php
-include_once ('function.php');
+    include_once ('function.php');
 
-session_start();
-$_SESSION['back'] = $_SERVER[REQUEST_URI];
+    session_start();
+    $_SESSION['back'] = $_SERVER[REQUEST_URI];
+    $auth = is_auth();
 
-
-//Проверка авторизации
-if (!is_auth()){
-    header('Location: login.php');
-    exit(); 
-}
-
-$error = '';
-
-if(count($_POST) > 0){
- 
-$fname = $_GET['f'];
-
-//если нажали кнопку "Сохранить"
-    if (isset($_POST['save'])) {
-
-        $title = trim($_POST['title']);
-        $content = trim($_POST['content']);
-
-        // проверка на то, что поля не пустые
-        if ($title == '' ||  $content == '' ){
-            $error = 'Все поля должны быть заполнены!';
-        }
-
-        //проверка на то, что название состоит из цифр
-        elseif (!ctype_digit($title)){
-            $error = 'Название должно содержать только цифры!';
-        }
-        //проверка на то, что название уникально в случае, если оно изменено
-        elseif ($title != $fname && file_exists("data/$title") ){
-            $error = 'Такое название уже есть!';
-        }
-
-        else{
-            //если название поменялось, удаляем старый файл
-            if($title != $fname){
-                unlink("data/$fname");
-                }
-            // Сохраняем контент и выходим
-            file_put_contents("data/$title", $content);
-            header ("Location: article.php?f=$title");
-            exit();   
-        }
-
-        //Выводим ошибку в случае ее наличия
-        echo "<p>$error</p>";
-
-    }
-    
-//Если нажали кнопку "Удалить"
-    elseif (isset($_POST['delete'])) {
-        unlink("data/$fname");
-        header ("Location: index.php");
+    //Проверка авторизации
+    if ($auth()){
+        header('Location: login.php');
         exit(); 
     }
-    
-}
 
-else{
+    $error = '';
+
+    if(count($_POST) > 0){
+     
     $fname = $_GET['f'];
-    $title = $fname;
-    $content = file_get_contents("data/$fname");
 
-}
+//если нажали кнопку "Сохранить"
+        if (isset($_POST['save'])) {
+            $title = trim($_POST['title']);
+            $content = trim($_POST['content']);
+
+            // проверка на то, что поля не пустые
+            if ($title == '' ||  $content == '' ){
+                $error = 'Все поля должны быть заполнены!';
+            }
+
+            //проверка на то, что название состоит из цифр
+            elseif (!ctype_digit($title)){
+                $error = 'Название должно содержать только цифры!';
+            }
+            //проверка на то, что название уникально в случае, если оно изменено
+            elseif ($title != $fname && file_exists("data/$title") ){
+                $error = 'Такое название уже есть!';
+            }
+
+            else{
+                //если название поменялось, удаляем старый файл
+                if($title != $fname){
+                    unlink("data/$fname");
+                    }
+                // Сохраняем контент и выходим
+                file_put_contents("data/$title", $content);
+                header ("Location: article.php?f=$title");
+                exit();   
+            }
+
+            //Выводим ошибку в случае ее наличия
+            echo "<p>$error</p>";
+
+        }
+        
+    //Если нажали кнопку "Удалить"
+        elseif (isset($_POST['delete'])) {
+            unlink("data/$fname");
+            header ("Location: index.php");
+            exit(); 
+        }
+    
+    }
+    else{
+        $fname = $_GET['f'];
+        $title = $fname;
+        $content = file_get_contents("data/$fname");
+
+    }
 ?>
 <!doctype html>
 <html>
@@ -84,7 +82,7 @@ else{
 		<input type="submit" name = "save" value="Сохранить">
         <input type="submit" name = "delete"  value="Удалить"><br>
 	</form><hr>
-
+    <a href = "index.php">К списку новостей</a><br>
     <a href="login.php">Выйти</a>
 </body>
 </html>
