@@ -6,7 +6,7 @@
     $auth = is_auth();
 
     //Проверка авторизации
-    if ($auth()){
+    if (!$auth){
         header('Location: login.php');
         exit(); 
     }
@@ -42,6 +42,7 @@
                     unlink("data/$fname");
                     }
                 // Сохраняем контент и выходим
+                $content = htmlspecialchars($content);
                 file_put_contents("data/$title", $content);
                 header ("Location: article.php?f=$title");
                 exit();   
@@ -54,9 +55,15 @@
         
     //Если нажали кнопку "Удалить"
         elseif (isset($_POST['delete'])) {
-            unlink("data/$fname");
-            header ("Location: index.php");
-            exit(); 
+            if (ctype_digit($fname) && is_file("data/$fname")){
+                unlink("data/$fname");
+                header ("Location: index.php");
+                exit();  
+            } 
+            else{
+                echo 'Такого файла не существует!';
+            }
+
         }
     
     }

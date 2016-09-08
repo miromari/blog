@@ -6,8 +6,10 @@ include_once ('function.php');
 session_start();
 $_SESSION['back'] = $_SERVER[REQUEST_URI];
 
+$auth = is_auth();
+
 //Проверка авторизации
-if (!is_auth()){
+if (!$auth){
     header('Location: login.php');
     exit(); 
 }
@@ -35,6 +37,7 @@ if(count($_POST) > 0){
     }
 
     else {
+        $content = htmlspecialchars($content);
         file_put_contents("data/$title", $content);
         header ("Location: article.php?f=$title");
         exit();
