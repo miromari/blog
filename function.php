@@ -18,6 +18,15 @@ function is_auth()
 }
 
 
+//функция для подключения базы данных
+function connect_db()
+{
+    $db = new PDO('mysql:host=localhost;dbname=php1', 'root', 'root');
+    $db->exec("SET NAMES UTF8");
+    return $db;
+}
+
+
 function clean_field($field)
 {
     $res = '';
@@ -25,22 +34,6 @@ function clean_field($field)
     $res = htmlspecialchars($res);
     return $res;
 }
-
-// function file_error($filename)
-// {
-//     $error = '';
-//     //проверка на то, что название состоит из цифр
-//     if (!ctype_digit($title)){
-//         $error = 'Название должно содержать только цифры!';
-//     }
-//     //проверка на то, что название уникально в случае, если оно изменено
-//     elseif ($title != $fname && file_exists("data/$title") ){
-//         $error = 'Такое название уже есть!';
-//     }
-
-
-
-// }
 
 
 //----------

@@ -2,76 +2,118 @@
     include_once ('function.php');
 
     session_start();
+    //запомнить url текущей страницы для потенциального редиректа после авторизации
     $_SESSION['back'] = $_SERVER[REQUEST_URI];
+    
+ //Проверка авторизации
     $auth = is_auth();
-
-    //Проверка авторизации
     if (!$auth){
         header('Location: login.php');
         exit(); 
     }
 
+//Подключение к базе данных
+    $db = connect_db(); 
+
+
+    $id_article = (int)$_GET['id'];
+
     $error = '';
 
     if(count($_POST) > 0){
-     
-    $fname = $_GET['f'];
-
-//если нажали кнопку "Сохранить"
+ 
+        //если нажали кнопку "Сохранить"
         if (isset($_POST['save'])) {
             $title = trim($_POST['title']);
             $content = trim($_POST['content']);
 
-            // проверка на то, что поля не пустые
+            // проверки
             if ($title == '' ||  $content == '' ){
                 $error = 'Все поля должны быть заполнены!';
             }
 
-            //проверка на то, что название состоит из цифр
-            elseif (!ctype_digit($title)){
-                $error = 'Название должно содержать только цифры!';
+            elseif (mb_strlen($title) > 150){
+                $error = 'Название не должно превышать 150 символов!';
             }
-            //проверка на то, что название уникально в случае, если оно изменено
-            elseif ($title != $fname && file_exists("data/$title") ){
-                $error = 'Такое название уже есть!';
-            }
+            
+            // добавить проверку на уникальность названия
+            // elseif (){
+            // }
 
             else{
-                //если название поменялось, удаляем старый файл
-                if($title != $fname){
-                    unlink("data/$fname");
-                    }
-                // Сохраняем контент и выходим
+
+
                 $content = htmlspecialchars($content);
-                file_put_contents("data/$title", $content);
-                header ("Location: article.php?f=$title");
-                exit();   
+                $title = htmlspecialchars($title);
+
+
+                $sql = "UPDATE articles SET title =:title, content =:content WHERE id_article =:id_article";
+
+                $query = $db->prepare($sql);
+                $params = ['title' => $title,'content' => $content, 'id_article' => $id_article];
+                $res = $query->execute($params);
+                
+                if ($res){
+
+                    header ("Location: article.php?id=$id_article");
+                    exit();
+                }
+                else{
+                    echo 'Произошла ошибка!';
+                }
             }
-
-            //Выводим ошибку в случае ее наличия
-            echo "<p>$error</p>";
-
         }
         
     //Если нажали кнопку "Удалить"
         elseif (isset($_POST['delete'])) {
-            if (ctype_digit($fname) && is_file("data/$fname")){
-                unlink("data/$fname");
-                header ("Location: index.php");
-                exit();  
+
+            if ($id_article > 0){
+                
+                $sql = "DELETE FROM articles WHERE id_article = '$id_article'";
+                $query = $db->prepare($sql);
+                $res = $query->execute();
+                
+                if ($res){
+                    header ("Location: index.php");
+                    exit();
+                }
+                else{
+                    $error =  'Такой статьи не существует!';  
+                }
+
             } 
             else{
-                echo 'Такого файла не существует!';
+                $error =  'Такой статьи не существует!';
             }
-
         }
+       
+        //Выводим ошибку в случае ее наличия
+        echo "<p>$error</p>";
     
     }
     else{
-        $fname = $_GET['f'];
-        $title = $fname;
-        $content = file_get_contents("data/$fname");
 
+//  Проверка, что GET число
+        if($id_article > 0){
+
+
+            $sql = "SELECT title, content FROM articles WHERE id_article = '$id_article'";
+            $query = $db->prepare($sql);
+            $res = $query->execute();
+            $article = $query->fetch();
+
+            //Если  статьи не существует
+            if(empty($article)){
+                header ("Location: index.php");
+                exit();
+            }          
+            $title = $article['title'];
+            $content = $article['content'];
+        }
+        else {
+            header ("Location: index.php");
+            exit();
+        }
     }
 ?>
 <!doctype html>
@@ -82,10 +124,10 @@
 </head>
 <body>
 	<form method="post">
-		Название файла<br>
-		<input type="text" name="title" size="42" value = "<? echo $title ?>"><br>
-		Содержимое файла<br>
-		<textarea name="content"  cols="40" rows="10" > <? echo $content ?></textarea><br>
+		Заголовок статьи<br>
+		<input type="text" name="title" size="100" value = "<? echo $title ?>"><br>
+		Текст статьи<br>
+		<textarea name="content"  cols="100" rows="10" > <? echo $content ?></textarea><br>
 		<input type="submit" name = "save" value="Сохранить">
         <input type="submit" name = "delete"  value="Удалить"><br>
 	</form><hr>

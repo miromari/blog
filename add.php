@@ -4,51 +4,77 @@
 include_once ('function.php');
 
 session_start();
+//запомнить url текущей страницы для потенциального редиректа после авторизации
 $_SESSION['back'] = $_SERVER[REQUEST_URI];
 
-$auth = is_auth();
 
 //Проверка авторизации
+$auth = is_auth();
 if (!$auth){
     header('Location: login.php');
     exit(); 
 }
 
+$error = '';
+
 
 if(count($_POST) > 0){
 
-    //Проверки, что поля заполнены, название  - уникальное и состоит из цифр
-    //!!!Добавить проверку/обработку на запрещенные символы
+
 
     $title = trim($_POST['title']);
     $content = trim($_POST['content']);
-    $error = '';
-
+  
+  //Проверки
     if ($title == '' ||  $content == '' ){
         $error = 'Все поля должны быть заполнены!';
     }
 
-    elseif (!ctype_digit($title)){
-        $error = 'Название должно содержать только цифры!';
+    elseif (mb_strlen($title) > 150){
+        $error = 'Название не должно превышать 150 символов!';
     }
+    
+    // добавить проверку на уникальность названия
+    // elseif (){
+    // }
 
-    elseif (file_exists("data/$title") ){
-        $error = 'Такое название уже есть!';
-    }
 
     else {
+        
+        //Подключение к базе данных
+        $db = connect_db();
+
         $content = htmlspecialchars($content);
-        file_put_contents("data/$title", $content);
-        header ("Location: article.php?f=$title");
-        exit();
+        $title = htmlspecialchars($title);
+
+
+        $sql = "INSERT INTO articles (title, content) VALUES (:title, :content)";
+        $query = $db->prepare($sql);
+        $params = ['title' => $title,'content' => $content];
+        $res = $query->execute($params);
+        // var_dump($res);
+        
+        if ($res){
+            
+            $id_article = $db->lastInsertId();
+
+            header ("Location: article.php?id=$id_article");
+            exit();
+        }
+        else{
+            $error = 'Произошла ошибка - попробуйте снова!';
+        }
+       
+       
+
     }
+//Выводим ошибку в случае ее наличия
     echo "<p>$error</p>";
 }
 
 else{
     $title = '';
     $content = '';
-    $error = '';
 }
 
   
@@ -61,10 +87,10 @@ else{
 </head>
 <body>
 	<form method="post">
-		Название файла<br>
-		<input type="text" name="title" value = "<? echo $title ?>"><br>
-		Содержимое файла<br>
-		<textarea name="content"> <? echo $content ?></textarea><br>
+        Заголовок статьи<br>
+        <input type="text" name="title" size="100" value = "<? echo $title ?>"><br>
+        Текст статьи<br>
+        <textarea name="content"  cols="100" rows="10" > <? echo $content ?></textarea><br>
 		<input type="submit" value="Сохранить"><br>
 	</form><hr>
     <a href = "index.php">К списку новостей</a><br>

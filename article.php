@@ -5,21 +5,32 @@
     $auth = is_auth();
 
 
-    $fname = $_GET['f'];
-    $path = "data/$fname";
+     $id_article = (int)$_GET['id'];
 
     
-    // Проверка, что GET непустой, что такой файл существует и не является папкой
-    // !!!!Нужно добавить полный запрет '../'  
+    // // Проверка, что GET непустой и статья существует 
         
-    if($fname != '' && file_exists($path) && is_file($path) ){
+    if($id_article > 0){
 
-        $text = file_get_contents($path);
-        echo '<h1>' . $fname . '</h1>';
-        echo '<p>' . $text . '</p>';
-    }
+        //Подключение к базе данных
+        $db = connect_db();
 
-    else {
+        $sql = "SELECT * FROM articles WHERE id_article = '$id_article'";
+        $query = $db->prepare($sql);
+        $res = $query->execute();
+        $article = $query->fetch();
+        
+        if(empty($article)){
+            header ("Location: index.php");
+            exit();
+        }
+
+        $title = $article['title'];
+        $content = $article['content'];
+
+
+
+    }else {
         header ("Location: index.php");
         exit();
     }
@@ -32,10 +43,13 @@
     <title>Страница новости</title>
 </head>
 <body>
-    <hr>
-    <? if($auth) {?>
-        <a href = "edit.php?f=<? echo $fname?>">Редактировать</a> | 
+        <?echo '<h1>' . $title . '</h1>';
+          echo '<p>' . $content . '</p> <hr>';
+
+    if($auth) {?>
+        <a href = "edit.php?id=<? echo $id_article?>">Редактировать</a> | 
     <?}?>
+
     <a href = "index.php">К списку новостей</a><br>
     <a href="login.php"><? echo ($auth ? 'Выйти':'Войти');?></a>
 </body>
