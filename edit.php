@@ -35,31 +35,37 @@
             elseif (mb_strlen($title) > 150){
                 $error = 'Название не должно превышать 150 символов!';
             }
-            
-            // добавить проверку на уникальность названия
-            // elseif (){
-            // }
 
             else{
 
-
-                $content = htmlspecialchars($content);
                 $title = htmlspecialchars($title);
-
+                $content = htmlspecialchars($content);
 
                 $sql = "UPDATE articles SET title =:title, content =:content WHERE id_article =:id_article";
 
                 $query = $db->prepare($sql);
                 $params = ['title' => $title,'content' => $content, 'id_article' => $id_article];
-                $res = $query->execute($params);
-                
-                if ($res){
-
+                $query->execute($params);
+                        
+            //Если ошибок не возникло
+                if ($query->errorCode() == PDO::ERR_NONE){
+                    
                     header ("Location: article.php?id=$id_article");
                     exit();
                 }
+                
+            //если возникла ошибка, проверяем, связано ли это с тем, что такой заголовок уже существует, код ошибки Duplicate entry - 1062
                 else{
-                    echo 'Произошла ошибка!';
+                    $info = $query->errorInfo();
+              
+                    if ($info[1] == 1062){
+                        $error = 'Cтатья с таким заголовком уже существует';
+                    }
+                    //в случае другой ошибки
+                    else{
+                        $error = 'Произошла ошибка - попробуйте снова!';  
+                        // echo implode('<br>', $info); 
+                    }
                 }
             }
         }

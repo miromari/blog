@@ -20,8 +20,6 @@ $error = '';
 
 if(count($_POST) > 0){
 
-
-
     $title = trim($_POST['title']);
     $content = trim($_POST['content']);
   
@@ -34,40 +32,45 @@ if(count($_POST) > 0){
         $error = 'Название не должно превышать 150 символов!';
     }
     
-    // добавить проверку на уникальность названия
-    // elseif (){
-    // }
-
 
     else {
         
         //Подключение к базе данных
         $db = connect_db();
 
-        $content = htmlspecialchars($content);
         $title = htmlspecialchars($title);
+        $content = htmlspecialchars($content);
 
 
         $sql = "INSERT INTO articles (title, content) VALUES (:title, :content)";
         $query = $db->prepare($sql);
         $params = ['title' => $title,'content' => $content];
-        $res = $query->execute($params);
-        // var_dump($res);
-        
-        if ($res){
+        $query->execute($params);
+
+        //Если ошибок не возникло, возвращаем id добавленной статьи и переходим на нее
+        if ($query->errorCode() == PDO::ERR_NONE){
             
             $id_article = $db->lastInsertId();
 
             header ("Location: article.php?id=$id_article");
             exit();
         }
+        
+        //если возникла ошибка, проверяем, связано ли это с тем, что такой заголовок уже существует, код ошибки Duplicate entry - 1062
         else{
-            $error = 'Произошла ошибка - попробуйте снова!';
+            $info = $query->errorInfo();
+      
+            if ($info[1] == 1062){
+                $error = 'Cтатья с таким заголовком уже существует';
+            }
+            //в случае другой ошибки
+            else{
+                $error = 'Произошла ошибка - попробуйте снова!';  
+                // echo implode('<br>', $info); 
+            }
         }
-       
-       
-
     }
+    
 //Выводим ошибку в случае ее наличия
     echo "<p>$error</p>";
 }
@@ -88,9 +91,9 @@ else{
 <body>
 	<form method="post">
         Заголовок статьи<br>
-        <input type="text" name="title" size="100" value = "<? echo $title ?>"><br>
+        <input type="text" name="title" size="100" value = "<?=$title?>"><br>
         Текст статьи<br>
-        <textarea name="content"  cols="100" rows="10" > <? echo $content ?></textarea><br>
+        <textarea name="content"  cols="100" rows="10" > <?=$content?></textarea><br>
 		<input type="submit" value="Сохранить"><br>
 	</form><hr>
     <a href = "index.php">К списку новостей</a><br>

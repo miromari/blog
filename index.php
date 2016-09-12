@@ -5,6 +5,7 @@ include_once ('function.php');
 session_start();
 $_SESSION['back'] = $_SERVER[REQUEST_URI];
 
+//Проверка авторизации
 $auth = is_auth();
 
 //Подключение к базе данных
@@ -26,18 +27,11 @@ $articles = $query->fetchAll();
     <title>Список новостей</title>
 </head>
 <body>
-    <?php
-        foreach ($articles as $article){
-            echo '<a href = "article.php?id='. $article['id_article'] . '">' . $article['title'] . '</a><br>';
-            
-            if($auth){
-                echo  '<a font = "8" href = "edit.php?id='.  $article['id_article'] .'">Редактировать</a>    ';
-                echo  '<a  font = "8" href = "delete.php?id='.  $article['id_article'] .'">Удалить</a>';
-            }
-
-            echo '<hr>';      
-        }
-    ?>
+    <h2>Список новостей</h2>
+    
+    <?foreach($articles as $article):?>
+        <a href="article.php?id=<?=$article['id_article']?>"><?=$article['title']?></a><hr>
+    <?endforeach?>
 
     <a href = "add.php">Добавить новость</a><br>
     <a href="login.php"><? echo ($auth ? 'Выйти':'Войти');?></a>

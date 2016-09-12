@@ -27,14 +27,6 @@ function connect_db()
 }
 
 
-function clean_field($field)
-{
-    $res = '';
-    $res = trim ($field);
-    $res = htmlspecialchars($res);
-    return $res;
-}
-
 
 //----------
 //Для проверки
