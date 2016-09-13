@@ -1,7 +1,7 @@
 <?php
     include_once ('function.php');
     session_start();
-    $_SESSION['back'] = $_SERVER[REQUEST_URI];
+    $_SESSION['back'] = $_SERVER['REQUEST_URI'];
 
     //Проверка авторизации
     $auth = is_auth();

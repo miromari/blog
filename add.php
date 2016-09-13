@@ -5,7 +5,7 @@ include_once ('function.php');
 
 session_start();
 //запомнить url текущей страницы для потенциального редиректа после авторизации
-$_SESSION['back'] = $_SERVER[REQUEST_URI];
+$_SESSION['back'] = $_SERVER['REQUEST_URI'];
 
 
 //Проверка авторизации
@@ -41,32 +41,34 @@ if(count($_POST) > 0){
         $title = htmlspecialchars($title);
         $content = htmlspecialchars($content);
 
-
-        $sql = "INSERT INTO articles (title, content) VALUES (:title, :content)";
+        $sql = "SELECT title FROM articles WHERE title = '$title'";
         $query = $db->prepare($sql);
-        $params = ['title' => $title,'content' => $content];
-        $query->execute($params);
-
-        //Если ошибок не возникло, возвращаем id добавленной статьи и переходим на нее
-        if ($query->errorCode() == PDO::ERR_NONE){
-            
-            $id_article = $db->lastInsertId();
-
-            header ("Location: article.php?id=$id_article");
-            exit();
-        }
-        
-        //если возникла ошибка, проверяем, связано ли это с тем, что такой заголовок уже существует, код ошибки Duplicate entry - 1062
-        else{
-            $info = $query->errorInfo();
-      
-            if ($info[1] == 1062){
+        $query->execute();
+        if ($query->fetch()){
                 $error = 'Cтатья с таким заголовком уже существует';
+        }
+        else{
+            $sql = "INSERT INTO articles (title, content) VALUES (:title, :content)";
+            $query = $db->prepare($sql);
+            $params = ['title' => $title,'content' => $content];
+            $query->execute($params);
+
+            //Если ошибок не возникло, возвращаем id добавленной статьи и переходим на нее
+            if ($query->errorCode() == PDO::ERR_NONE){
+                
+                $id_article = $db->lastInsertId();
+
+                header ("Location: article.php?id=$id_article");
+                exit();
             }
-            //в случае другой ошибки
+            
+            //если возникла ошибка
             else{
+                $info = $query->errorInfo();
                 $error = 'Произошла ошибка - попробуйте снова!';  
-                // echo implode('<br>', $info); 
+                file_put_contents('error.log', implode(',', $info).'\r', FILE_APPEND);
+                    // echo implode('<br>', $info); 
+                
             }
         }
     }

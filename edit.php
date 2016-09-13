@@ -3,7 +3,7 @@
 
     session_start();
     //запомнить url текущей страницы для потенциального редиректа после авторизации
-    $_SESSION['back'] = $_SERVER[REQUEST_URI];
+    $_SESSION['back'] = $_SERVER['REQUEST_URI'];
     
  //Проверка авторизации
     $auth = is_auth();
@@ -41,28 +41,33 @@
                 $title = htmlspecialchars($title);
                 $content = htmlspecialchars($content);
 
-                $sql = "UPDATE articles SET title =:title, content =:content WHERE id_article =:id_article";
-
+                $sql = "SELECT title FROM articles WHERE title = '$title' AND id_article != '$id_article'";
                 $query = $db->prepare($sql);
-                $params = ['title' => $title,'content' => $content, 'id_article' => $id_article];
-                $query->execute($params);
-                        
-            //Если ошибок не возникло
-                if ($query->errorCode() == PDO::ERR_NONE){
-                    
-                    header ("Location: article.php?id=$id_article");
-                    exit();
-                }
+                $query->execute();
                 
-            //если возникла ошибка, проверяем, связано ли это с тем, что такой заголовок уже существует, код ошибки Duplicate entry - 1062
-                else{
-                    $info = $query->errorInfo();
-              
-                    if ($info[1] == 1062){
+                if ($query->fetch()){
                         $error = 'Cтатья с таким заголовком уже существует';
+                }
+                else{
+
+                    $sql = "UPDATE articles SET title =:title, content =:content WHERE id_article =:id_article";
+
+                    $query = $db->prepare($sql);
+                    $params = ['title' => $title,'content' => $content, 'id_article' => $id_article];
+                    $query->execute($params);
+                            
+                //Если ошибок не возникло
+                    if ($query->errorCode() == PDO::ERR_NONE){
+                        
+                        header ("Location: article.php?id=$id_article");
+                        exit();
                     }
-                    //в случае другой ошибки
+                    
+                //если возникла ошибка, проверяем, связано ли это с тем, что такой заголовок уже существует, код ошибки Duplicate entry - 1062
                     else{
+                        $info = $query->errorInfo();
+                  
+                        
                         $error = 'Произошла ошибка - попробуйте снова!';  
                         // echo implode('<br>', $info); 
                     }
