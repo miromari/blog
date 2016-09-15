@@ -1,5 +1,8 @@
 <?php
-    include_once ('function.php');
+    include_once ('m/auth.php');
+    include_once ('m/pdo.php');
+    include_once ('m/articles.php');
+
     session_start();
     $_SESSION['back'] = $_SERVER['REQUEST_URI'];
 
@@ -14,10 +17,7 @@
         //Подключение к базе данных
         $db = connect_db();
 
-        $sql = "SELECT * FROM articles WHERE id_article = '$id_article'";
-        $query = $db->prepare($sql);
-        $query->execute();
-        $article = $query->fetch();
+        $article = article_get($id_article, $db);
         
         //Если такой статьи нет
         if(empty($article)){
@@ -33,24 +33,4 @@
         header ("Location: index.php");
         exit();
     }
-?>
-
-<!doctype html>
-<html>
-<head>
-    <title>Страница новости</title>
-</head>
-<body>
-    <h2><?=$title ?></h2>
-    <p> <?=$content ?></p><hr>
-    
-    <?if($auth):?>
-    <a href = "edit.php?id=<?=$id_article?>">Редактировать</a> | 
-    <?endif?>
-
-    <a href = "index.php">К списку новостей</a><br>
-    <a href="login.php"><?=($auth?'Выйти':'Войти')?></a>
-
-
-</body>
-</html>
+include_once('v/v_article.php');

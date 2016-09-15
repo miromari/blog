@@ -1,5 +1,8 @@
 <?php
-    include_once ('function.php');
+ 
+    include_once ('m/auth.php');
+    include_once ('m/pdo.php');
+    include_once ('m/articles.php');
 
     session_start();
     //запомнить url текущей страницы для потенциального редиректа после авторизации
@@ -24,55 +27,25 @@
  
         //если нажали кнопку "Сохранить"
         if (isset($_POST['save'])) {
-            $title = trim($_POST['title']);
-            $content = trim($_POST['content']);
 
-            // проверки
-            if ($title == '' ||  $content == '' ){
-                $error = 'Все поля должны быть заполнены!';
-            }
+            //Обработка полей
+            $title = trim (htmlspecialchars ($_POST['title']));
+            $content = trim (htmlspecialchars ($_POST['content']));
 
-            elseif (mb_strlen($title) > 150){
-                $error = 'Название не должно превышать 150 символов!';
-            }
+        //Валидация полей
+            $error = validation_error($title, $content);
 
-            else{
-
-                $title = htmlspecialchars($title);
-                $content = htmlspecialchars($content);
-
-                $sql = "SELECT title FROM articles WHERE title = '$title' AND id_article != '$id_article'";
-                $query = $db->prepare($sql);
-                $query->execute();
-                
-                if ($query->fetch()){
-                        $error = 'Cтатья с таким заголовком уже существует';
-                }
-                else{
-
-                    $sql = "UPDATE articles SET title =:title, content =:content WHERE id_article =:id_article";
-
-                    $query = $db->prepare($sql);
-                    $params = ['title' => $title,'content' => $content, 'id_article' => $id_article];
-                    $query->execute($params);
-                            
-                //Если ошибок не возникло
-                    if ($query->errorCode() == PDO::ERR_NONE){
-                        
-                        header ("Location: article.php?id=$id_article");
-                        exit();
-                    }
-                    
-                //если возникла ошибка, проверяем, связано ли это с тем, что такой заголовок уже существует, код ошибки Duplicate entry - 1062
-                    else{
-                        $info = $query->errorInfo();
-                  
-                        
-                        $error = 'Произошла ошибка - попробуйте снова!';  
-                        // echo implode('<br>', $info); 
-                    }
+        //если ошибок нет
+            if (!$error){
+                 if(article_edit($id_article, $title, $content, $db)){
+                    header ("Location: article.php?id=$id_article");
+                    exit();
+                 }     
+                else{                  
+                    $error = 'Произошла ошибка - попробуйте снова!';  
                 }
             }
+
         }
         
     //Если нажали кнопку "Удалить"
@@ -80,16 +53,12 @@
 
             if ($id_article > 0){
                 
-                $sql = "DELETE FROM articles WHERE id_article = '$id_article'";
-                $query = $db->prepare($sql);
-                $res = $query->execute();
-                
-                if ($res){
+                if (article_delete($id_article, $db)){
                     header ("Location: index.php");
                     exit();
                 }
                 else{
-                    $error =  'Такой статьи не существует!';  
+                    $error =  'Произошла ошибка - попробуйте снова!';  
                 }
 
             } 
@@ -97,21 +66,15 @@
                 $error =  'Такой статьи не существует!';
             }
         }
-       
-        //Выводим ошибку в случае ее наличия
-        echo "<p>$error</p>";
-    
     }
-    else{
+    // Пришли через GET -нужно заполнить формы
 
+    else{ 
 //  Проверка, что GET число
         if($id_article > 0){
 
 
-            $sql = "SELECT title, content FROM articles WHERE id_article = '$id_article'";
-            $query = $db->prepare($sql);
-            $res = $query->execute();
-            $article = $query->fetch();
+            $article = article_get($id_article, $db);
 
             //Если  статьи не существует
             if(empty($article)){
@@ -126,23 +89,6 @@
             exit();
         }
     }
-?>
-<!doctype html>
-<html>
-<head>
-    <title>Добавление новости</title>
 
-</head>
-<body>
-	<form method="post">
-		Заголовок статьи<br>
-		<input type="text" name="title" size="100" value = "<? echo $title ?>"><br>
-		Текст статьи<br>
-		<textarea name="content"  cols="100" rows="10" > <? echo $content ?></textarea><br>
-		<input type="submit" name = "save" value="Сохранить">
-        <input type="submit" name = "delete"  value="Удалить"><br>
-	</form><hr>
-    <a href = "index.php">К списку новостей</a><br>
-    <a href="login.php">Выйти</a>
-</body>
-</html>
+include_once ('v/v_edit.php');
+

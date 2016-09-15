@@ -18,18 +18,9 @@ function is_auth()
 }
 
 
-//функция для подключения базы данных
-function connect_db()
-{
-    $db = new PDO('mysql:host=localhost;dbname=php1', 'root', 'root');
-    $db->exec("SET NAMES UTF8");
-    return $db;
-}
-
-
 
 //----------
-//Для проверки
+//Для проверки - пока здесь
 function my_print_r($array)
 {   
     echo '<pre>';
