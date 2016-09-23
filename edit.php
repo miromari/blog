@@ -18,10 +18,10 @@
 //Подключение к базе данных
     $db = connect_db(); 
 
-
     $id_article = (int)$_GET['id'];
+    $error = [];
+    $db_error = '';
 
-    $error = '';
 
     if(count($_POST) > 0){
  
@@ -33,16 +33,16 @@
             $content = trim (htmlspecialchars ($_POST['content']));
 
         //Валидация полей
-            $error = validation_error($title, $content);
+            $error = validate($title, $content);
 
         //если ошибок нет
-            if (!$error){
+            if (empty($error)){
                  if(article_edit($id_article, $title, $content, $db)){
                     header ("Location: article.php?id=$id_article");
                     exit();
                  }     
                 else{                  
-                    $error = 'Произошла ошибка - попробуйте снова!';  
+                    $db_error = 'Произошла ошибка - попробуйте снова!';  
                 }
             }
 

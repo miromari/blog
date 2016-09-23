@@ -16,7 +16,8 @@
         exit(); 
     }
 
-    $error = '';
+    $error = [];
+    $db_error = '';
     $title = '';
     $content = '';
 
@@ -27,10 +28,10 @@
         $content = trim (htmlspecialchars ($_POST['content']));
 
     //Валидация полей
-        $error = validation_error ($title, $content);
+        $error = validate($title, $content);
      
     //если ошибок нет
-        if (!$error){
+        if (empty($error)){
             
             //Подключение к базе данных
             $db = connect_db();
@@ -41,7 +42,7 @@
                 exit();
             }
             else{
-                $error = 'Произошла ошибка - попробуйте снова!';
+                $db_error = 'Произошла ошибка - попробуйте снова!';
             }
         }
     }

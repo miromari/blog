@@ -20,7 +20,7 @@
         $article = article_get($id_article, $db);
         
         //Если такой статьи нет
-        if(empty($article)){
+        if(!$article){
             header ("Location: index.php");
             exit();
         }

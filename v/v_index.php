@@ -11,6 +11,6 @@
     <?endforeach?>
 
     <a href = "add.php">Добавить новость</a><br>
-    <a href="login.php"><? echo ($auth ? 'Выйти':'Войти');?></a>
+    <a href="login.php"><?=($auth ? 'Выйти':'Войти')?></a>
 </body>
 </html>

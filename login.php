@@ -38,7 +38,7 @@
         setcookie('password', '', time()-1);
 
         // Если мы пришли на логин с нуля - удаляем старую отметку back
-         if (!isset($_SERVER[HTTP_REFERER])){
+         if (!isset($_SERVER['HTTP_REFERER'])){
             unset($_SESSION['back']);
         }
 
