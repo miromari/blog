@@ -1,6 +1,7 @@
 <?php
 
 
+    include_once ('m/system.php');
     include_once ('m/auth.php');
     include_once ('m/pdo.php');
     include_once ('m/articles.php');
@@ -48,5 +49,20 @@
     }
         
 
-    include_once('v/v_add.php');
+//Создание шаблона
+    $content = template('v/v_add.php',[
+                        'title' => $title, 
+                        'content' => $content,
+                        'error' => $error,  
+                        'db_error' => $db_error,    
+                        'auth' => $auth
+                ]);
+
+    
+    $html = template('v/v_main.php',[
+                    'title' => 'Добавление новости', 
+                    'content' => $content
+                ]);
+
+    echo $html;
 

@@ -38,8 +38,6 @@ function article_get($id_article, $db)
 }
 
 
-  
-
 //Валидация полей, поиск ошибок
 function validate($title, $content)
 
@@ -72,23 +70,7 @@ function validate($title, $content)
 
 }
 
-//Валидация полей, поиск ошибок
-function validation_error($title, $content)
 
-{
-    $error = false;
-
-     if ($title == '' ||  $content == '' ){
-        $error = 'Все поля должны быть заполнены!';
-    }
-
-    elseif (mb_strlen($title) > 150){
-        $error = 'Название не должно превышать 150 символов!';
-    }
-    
-    return $error;
-
-}
 //Добавление статьи
 function article_add($title, $content, $db)
 {

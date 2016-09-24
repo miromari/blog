@@ -1,5 +1,6 @@
 <?php
 
+    include_once ('m/system.php');
     include_once ('m/auth.php');
     include_once ('m/pdo.php');
     include_once ('m/articles.php');
@@ -15,7 +16,7 @@
     $db = connect_db();
 
 
-    //Извлечение всех статей!
+    //Извлечение всех статей
     $articles = articles_all($db);
 
     if ($articles === false){
@@ -24,4 +25,17 @@
     elseif ($articles  == []){
         echo 'Нет новостей для отображения';
     }
-    include_once ('v/v_index.php');
+    //Создание шаблона
+    $content = template('v/v_index.php',[
+                        'articles' => $articles, 
+                        'auth' => $auth
+                ]);
+
+    
+    $html = template('v/v_main.php',[
+                    'title' => 'Главная страница', 
+                    'content' => $content
+                ]);
+
+    echo $html;
+

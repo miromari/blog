@@ -1,4 +1,5 @@
 <?php
+    include_once ('m/system.php');
     include_once ('m/auth.php');
     include_once ('m/pdo.php');
     include_once ('m/articles.php');
@@ -33,4 +34,18 @@
         header ("Location: index.php");
         exit();
     }
-include_once('v/v_article.php');
+    //Создание шаблона
+    $content = template('v/v_article.php',[
+                        'id_article' => $id_article, 
+                        'title' => $title, 
+                        'content' => $content, 
+                        'auth' => $auth
+                ]);
+
+    
+    $html = template('v/v_main.php',[
+                    'title' => $title, 
+                    'content' => $content
+                ]);
+
+    echo $html;
