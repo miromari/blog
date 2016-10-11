@@ -1,13 +1,19 @@
 <?php
 	session_start(); 
+    include_once ('m/system.php');
+    include_once ('m/pdo.php');
+    include_once ('m/auth.php');
 
     $login = '';
     $password = '';
+    $auth = is_auth();
 
 	if(count($_POST) > 0){
         
-       $login = $_POST['login'];
-       $password = $_POST['password'];
+       $login = trim($_POST['login']);
+       $password = trim($_POST['password']);
+
+
 
         if($login == 'admin' && $password == 'qwerty'){
 
@@ -44,4 +50,18 @@
 
     }
 
-include_once('v/v_login.php');
+//Создание шаблона
+    $content = template('v/v_login.php',[
+                        'login' => $login, 
+                        'password' => $password
+
+                ]);
+
+
+    $html = template('v/v_main.php',[
+                    'title' => 'Авторизация', 
+                    'content' => $content,  
+                    'auth' => $auth
+                ]);
+
+    echo $html;

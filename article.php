@@ -38,14 +38,16 @@
     $content = template('v/v_article.php',[
                         'id_article' => $id_article, 
                         'title' => $title, 
-                        'content' => $content, 
+                        'content' => $content,
                         'auth' => $auth
+
                 ]);
 
     
     $html = template('v/v_main.php',[
                     'title' => $title, 
-                    'content' => $content
+                    'content' => $content, 
+                    'auth' => $auth
                 ]);
 
     echo $html;

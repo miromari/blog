@@ -54,14 +54,15 @@
                         'title' => $title, 
                         'content' => $content,
                         'error' => $error,  
-                        'db_error' => $db_error,    
-                        'auth' => $auth
+                        'db_error' => $db_error
                 ]);
 
     
     $html = template('v/v_main.php',[
                     'title' => 'Добавление новости', 
-                    'content' => $content
+                    'content' => $content,
+                    'auth' => $auth
+
                 ]);
 
     echo $html;

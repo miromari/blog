@@ -25,16 +25,18 @@
     elseif ($articles  == []){
         echo 'Нет новостей для отображения';
     }
+   
     //Создание шаблона
     $content = template('v/v_index.php',[
-                        'articles' => $articles, 
-                        'auth' => $auth
+                        'articles' => $articles 
+                        
                 ]);
 
     
     $html = template('v/v_main.php',[
                     'title' => 'Главная страница', 
-                    'content' => $content
+                    'content' => $content,
+                    'auth' => $auth
                 ]);
 
     echo $html;
