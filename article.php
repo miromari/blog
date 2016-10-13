@@ -1,8 +1,10 @@
 <?php
+    
     include_once ('m/system.php');
     include_once ('m/auth.php');
-    include_once ('m/pdo.php');
-    include_once ('m/articles.php');
+    include_once ('m/DB.php');
+    include_once ('m/BaseModel.php');
+    include_once ('m/ArticleModel.php');
 
     session_start();
     $_SESSION['back'] = $_SERVER['REQUEST_URI'];
@@ -15,10 +17,8 @@
     //  Проверка, что GET - число
     if($id_article > 0){
 
-        //Подключение к базе данных
-        $db = connect_db();
-
-        $article = article_get($id_article, $db);
+        $mArticle = new ArticleModel();
+        $article = $mArticle->get($id_article);
         
         //Если такой статьи нет
         if(!$article){

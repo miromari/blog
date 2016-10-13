@@ -2,9 +2,9 @@
 
     include_once ('m/system.php');
     include_once ('m/auth.php');
-    include_once ('m/pdo.php');
-    include_once ('m/articles.php');
-
+    include_once ('m/DB.php');
+    include_once ('m/BaseModel.php');
+    include_once ('m/ArticleModel.php');
 
     session_start();
     $_SESSION['back'] = $_SERVER['REQUEST_URI'];
@@ -12,27 +12,20 @@
     //Проверка авторизации
     $auth = is_auth();
 
-    //Подключение к базе данных
-    $db = connect_db();
-
-
     //Извлечение всех статей
-    $articles = articles_all($db);
+    $mArticle = new ArticleModel();
+    $articles = $mArticle->all();
 
-    if ($articles === false){
-        echo 'Возникла ошибка!';
-    }
-    elseif ($articles  == []){
-        echo 'Нет новостей для отображения';
-    }
-   
+    if (!$articles){
+        $content = 'Возникла ошибка!';
+    }   
+    else{
     //Создание шаблона
     $content = template('v/v_index.php',[
-                        'articles' => $articles 
-                        
+                        'articles' => $articles         
                 ]);
 
-    
+    }
     $html = template('v/v_main.php',[
                     'title' => 'Главная страница', 
                     'content' => $content,

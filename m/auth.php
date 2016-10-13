@@ -1,5 +1,6 @@
 <?php
 
+
 // Проверка авторизации
 function is_auth()
 {
@@ -16,7 +17,9 @@ function is_auth()
         }
     return true;
 
-}
+}	
+
+
 
 
 

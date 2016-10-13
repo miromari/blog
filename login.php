@@ -1,8 +1,11 @@
 <?php
-	session_start(); 
+    
     include_once ('m/system.php');
-    include_once ('m/pdo.php');
     include_once ('m/auth.php');
+    include_once ('m/DB.php');
+    include_once ('m/BaseModel.php');
+
+    session_start(); 
 
     $login = '';
     $password = '';
@@ -12,7 +15,6 @@
         
        $login = trim($_POST['login']);
        $password = trim($_POST['password']);
-
 
 
         if($login == 'admin' && $password == 'qwerty'){
@@ -25,7 +27,7 @@
                 setcookie('password', md5($password), time() + 3600 * 24 * 7);
             } 
 
-// Проверяем, что есть отметка, откуда мы пришли и перенаправляем туда
+    // Проверяем, что есть отметка, откуда мы пришли и перенаправляем туда
             if (isset($_SESSION['back'])){
                 $back = $_SESSION['back'];
                 header("Location: $back");  

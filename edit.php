@@ -2,8 +2,9 @@
  
     include_once ('m/system.php');
     include_once ('m/auth.php');
-    include_once ('m/pdo.php');
-    include_once ('m/articles.php');
+    include_once ('m/DB.php');
+    include_once ('m/BaseModel.php');
+    include_once ('m/ArticleModel.php');
 
     session_start();
     //запомнить url текущей страницы для потенциального редиректа после авторизации
@@ -11,19 +12,18 @@
     
  //Проверка авторизации
     $auth = is_auth();
+    
     if (!$auth){
         header('Location: login.php');
         exit(); 
     }
 
-//Подключение к базе данных
-    $db = connect_db(); 
-
     $id_article = (int)$_GET['id'];
     $error = [];
     $db_error = '';
 
-
+    $mArticle = new ArticleModel();
+    
     if(count($_POST) > 0){
  
         //если нажали кнопку "Сохранить"
@@ -34,11 +34,11 @@
             $content = trim (htmlspecialchars ($_POST['content']));
 
         //Валидация полей
-            $error = validate($title, $content);
+            $error = $mArticle->validate($title, $content);
 
         //если ошибок нет
             if (empty($error)){
-                 if(article_edit($id_article, $title, $content, $db)){
+                 if($mArticle->edit($id_article, $title, $content)){
                     header ("Location: article.php?id=$id_article");
                     exit();
                  }     
@@ -54,17 +54,17 @@
 
             if ($id_article > 0){
                 
-                if (article_delete($id_article, $db)){
+                if ($mArticle->delete($id_article)){
                     header ("Location: index.php");
                     exit();
                 }
                 else{
-                    $error =  'Произошла ошибка - попробуйте снова!';  
+                    $db_error =  'Произошла ошибка - попробуйте снова!';  
                 }
 
             } 
             else{
-                $error =  'Такой статьи не существует!';
+                $db_error =  'Такой статьи не существует!';
             }
         }
     }
@@ -75,7 +75,7 @@
         if($id_article > 0){
 
 
-            $article = article_get($id_article, $db);
+            $article = $mArticle->get($id_article);
 
             //Если  статьи не существует
             if(empty($article)){
