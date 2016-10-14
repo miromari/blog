@@ -13,7 +13,7 @@
     $auth = is_auth();
 
     //Извлечение всех статей
-    $mArticle = new ArticleModel();
+    $mArticle = ArticleModel::Instance();
     $articles = $mArticle->all();
 
     if (!$articles){

@@ -22,7 +22,7 @@
     $error = [];
     $db_error = '';
 
-    $mArticle = new ArticleModel();
+    $mArticle = ArticleModel::Instance();
     
     if(count($_POST) > 0){
  

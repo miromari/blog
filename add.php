@@ -31,7 +31,7 @@
 
 
     //Валидация полей
-        $mArticle = new ArticleModel();
+        $mArticle = ArticleModel::Instance();
         $error = $mArticle->validate($title, $content);
      
     //если ошибок нет

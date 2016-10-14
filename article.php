@@ -17,7 +17,7 @@
     //  Проверка, что GET - число
     if($id_article > 0){
 
-        $mArticle = new ArticleModel();
+        $mArticle = ArticleModel::Instance();
         $article = $mArticle->get($id_article);
         
         //Если такой статьи нет
