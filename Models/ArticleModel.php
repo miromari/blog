@@ -1,5 +1,8 @@
 <?php
 
+namespace Models;
+
+use Core\PDO;
 
 class ArticleModel extends BaseModel
 {
@@ -60,7 +63,7 @@ class ArticleModel extends BaseModel
     {
         $sql = "INSERT INTO articles (title, content) VALUES (:title, :content)";
         $params = ['title' => $title, 'content' => $content];
-        $query = $this->db->prepare($sql);
+        $query = $this->pdo->prepare($sql);
         $res = $query->execute($params);
 
         if (!$res){
@@ -68,7 +71,7 @@ class ArticleModel extends BaseModel
             return false;  
         }
         else{
-            return $this->db->lastInsertId();
+            return $this->pdo->lastInsertId();
         }
 
     }
@@ -78,7 +81,7 @@ class ArticleModel extends BaseModel
     {
         $sql = "UPDATE articles SET title =:title, content =:content WHERE id_article =:id_article";
         $params = ['title' => $title,'content' => $content,'id_article' => $id_article];
-        $query = $this->db->prepare($sql);
+        $query = $this->pdo->prepare($sql);
         $res = $query->execute($params);
 
         if (!$res) {

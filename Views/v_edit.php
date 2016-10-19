@@ -1,4 +1,4 @@
-<p class = "error"><?=$db_error?></p>
+<p class = "error"><?=$message?></p>
 <form method="post">
     Заголовок статьи<br>
     <input type="text" name="title" size="80" value = "<?=$title?>"><br>
@@ -6,6 +6,7 @@
     Текст статьи<br>
     <textarea name="content"  cols="80" rows="10" > <?=$content?></textarea><br>
      <span class = "error"><?=$error['content']?></span><br>
-	<input type="submit" value="Сохранить"><br>
-</form><hr>
+	<input type="submit" name = "save" formaction="edit?id=<?=$id_article?>" value="Сохранить">
+    <input type="submit" name = "delete" formaction="delete?id=<?=$id_article?>" value="Удалить"><br>
 
+</form><hr>

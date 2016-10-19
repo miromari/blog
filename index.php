@@ -1,36 +1,15 @@
 <?php
 
-    include_once ('m/system.php');
-    include_once ('m/auth.php');
-    include_once ('m/DB.php');
-    include_once ('m/BaseModel.php');
-    include_once ('m/ArticleModel.php');
+function __autoload($classname)
+{
+    include_once str_replace("\\", DIRECTORY_SEPARATOR, $classname) . '.php';
+}
 
-    session_start();
-    $_SESSION['back'] = $_SERVER['REQUEST_URI'];
+include_once ('Models/system.php');
 
-    //Проверка авторизации
-    $auth = is_auth();
+session_start();
+$_SESSION['back'] = $_SERVER['REQUEST_URI'];
 
-    //Извлечение всех статей
-    $mArticle = ArticleModel::Instance();
-    $articles = $mArticle->all();
+$app = new Core\App(new Core\Request($_GET,$_POST,$_SERVER));
 
-    if (!$articles){
-        $content = 'Возникла ошибка!';
-    }   
-    else{
-    //Создание шаблона
-    $content = template('v/v_index.php',[
-                        'articles' => $articles         
-                ]);
-
-    }
-    $html = template('v/v_main.php',[
-                    'title' => 'Главная страница', 
-                    'content' => $content,
-                    'auth' => $auth
-                ]);
-
-    echo $html;
-
+$app->go();  

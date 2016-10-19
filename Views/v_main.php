@@ -3,7 +3,7 @@
 <head>
 <title><?=$title?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="v/style.css" rel="stylesheet" type="text/css" />
+<link href="Views/style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div id="container">
@@ -14,13 +14,14 @@
   <div id="sidebar">
     <div class="menu">
       <ul>
-        <li><a href="index.php">На главную</a></li>
+        <li><a href="/">На главную</a></li>
+        <li><a href="/add">Добавить новость</a></li>
+
+       <!--  <?if($auth):?>
+         <li><a href="/add">Добавить новость</a></li>
+        <?endif?> -->
         
-        <?if($auth):?>
-         <li><a href="add.php">Добавить новость</a></li>
-        <?endif?>
-        
-        <li><a href="login.php"><?=($auth ? 'Выйти':'Войти')?></a></li>
+        <!-- <li><a href="\login"><?=($auth ? 'Выйти':'Войти')?></a></li> -->
       </ul>
     </div>
   </div>

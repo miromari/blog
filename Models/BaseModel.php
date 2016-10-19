@@ -1,22 +1,25 @@
 <?php
 
+namespace Models;
+
+use Core\PDO;
 
 abstract class BaseModel
 {
-    protected $db;
+    protected $pdo;
     protected $table;
     protected $pk;
 
 
     public function __construct()
     {
-        $this->db = DB::Instance();
+        $this->pdo = PDO::Instance();
     }
 
     public function all()
     {
         $sql = "SELECT * FROM {$this->table}";
-        $query = $this->db->prepare($sql);
+        $query = $this->pdo->prepare($sql);
         $res = $query->execute();
 
         if (!$res){
@@ -32,7 +35,7 @@ abstract class BaseModel
     {
 
          $sql = "SELECT * FROM {$this->table} WHERE {$this->pk} = '$id'";
-        $query = $this->db->prepare($sql);
+        $query = $this->pdo->prepare($sql);
         $res = $query->execute();
         
         if (!$res){
@@ -49,7 +52,7 @@ abstract class BaseModel
     {
         $sql = "DELETE FROM {$this->table} WHERE {$this->pk} =:id";
         $params = ['id' => $id];
-        $query = $this->db->prepare($sql);
+        $query = $this->pdo->prepare($sql);
         $res = $query->execute($params);
 
         if (!$res) {
