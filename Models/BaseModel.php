@@ -2,7 +2,7 @@
 
 namespace Models;
 
-use Core\PDO;
+use Core\SQL;
 
 abstract class BaseModel
 {
@@ -13,56 +13,49 @@ abstract class BaseModel
 
     public function __construct()
     {
-        $this->pdo = PDO::Instance();
+        $this->pdo = SQL::Instance();
     }
 
     public function all()
     {
-        $sql = "SELECT * FROM {$this->table}";
-        $query = $this->pdo->prepare($sql);
-        $res = $query->execute();
-
-        if (!$res){
-            $this->errorLog($query);
-            return false;  
-        }
-        else{
-            return $query->fetchAll();
-        }
+        return $this->pdo->query("SELECT * FROM {$this->table}");
     }
 
     public function get($id)
     {
 
-         $sql = "SELECT * FROM {$this->table} WHERE {$this->pk} = '$id'";
-        $query = $this->pdo->prepare($sql);
-        $res = $query->execute();
-        
-        if (!$res){
-            $this->errorLog($query);
-            return false;  
-        }
-        else{
-            return $query->fetch();
-        }
+         $res  = $this->pdo->query( "SELECT * FROM {$this->table} WHERE {$this->pk} = '$id'");
+         
+        return $res ? $res[0] : false;
 
     }
 
     public function delete($id)
-    {
-        $sql = "DELETE FROM {$this->table} WHERE {$this->pk} =:id";
-        $params = ['id' => $id];
-        $query = $this->pdo->prepare($sql);
-        $res = $query->execute($params);
-
-        if (!$res) {
-            $this->errorLog($query);
-            return false;
-        }else{
-            return true;
-        }
-
+    {    
+        return $this->pdo->delete($this->table, "$this->pk = '$id'");
     }
+
+    // $object  - [key1 => 'value1', key2 => 'value2']
+    public function add($object)
+    {
+        return $this->pdo->insert($this->table, $object);
+    }
+    
+    public function edit($id, $object)
+    {
+        return $this->pdo->update($this->table, $object, "$this->pk = '$id'");
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     //обработка ошибки работы с БД - запись в файл
     protected function errorLog($query)

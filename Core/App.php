@@ -14,15 +14,19 @@ class App
 	public function go()
 	{
 		$params = $this->getRoutByRequest();
+
+
 		if(!$params){
 			$params = $this->getRoutByParams('default');
 		}
 		$ctrl = new $params['controller']($this->request);
+
+ 		if ($this->request->rout != '/login'){
+			$_SESSION['back'] = $_SERVER['REQUEST_URI'];
+		}
+
 		$action = $params['action'];
- 		if ($ctrl->$action() === false){
- 			$ctrl = new \Controllers\PageController($this->request);
- 			$ctrl->PageNotFoundAction();
- 		}
+		$ctrl->$action();
 
  		$ctrl->render(); 
 

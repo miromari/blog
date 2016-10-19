@@ -54,44 +54,7 @@ class ArticleModel extends BaseModel
         }
         
         return $error;
-
     }
-
-
-    //Добавление статьи
-    public function add($title, $content)
-    {
-        $sql = "INSERT INTO articles (title, content) VALUES (:title, :content)";
-        $params = ['title' => $title, 'content' => $content];
-        $query = $this->pdo->prepare($sql);
-        $res = $query->execute($params);
-
-        if (!$res){
-            $this->errorLog($query);
-            return false;  
-        }
-        else{
-            return $this->pdo->lastInsertId();
-        }
-
-    }
-
-    //Редактирование статьи
-    public function edit($id_article, $title, $content)
-    {
-        $sql = "UPDATE articles SET title =:title, content =:content WHERE id_article =:id_article";
-        $params = ['title' => $title,'content' => $content,'id_article' => $id_article];
-        $query = $this->pdo->prepare($sql);
-        $res = $query->execute($params);
-
-        if (!$res) {
-            $this->errorLog($query);
-            return false;
-        }else{
-            return true;
-        }
-    }
-
 }
 
 

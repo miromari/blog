@@ -10,8 +10,7 @@ class ArticleController extends BaseController
 	
 	public function indexAction()
 	{
-	    $mArticle = ArticleModel::Instance();
-	    $articles = $mArticle->all();
+	    $articles = ArticleModel::Instance()->all();
 
 	    if (!$articles){
 	        $content = 'Возникла ошибка!';
@@ -44,19 +43,15 @@ class ArticleController extends BaseController
                         'title' => $article['title'], 
                         'content' => $article['content'],
                         'auth' => $this->auth
-
                 ]);
-
 	}
 
 	public function addAction()
 	{
-
 		$error = [];
 	    $title = '';
 	    $content = '';
 	   	$message = '';
-
 
 	    if(count($this->request->getPost()) > 0){
 
@@ -71,7 +66,7 @@ class ArticleController extends BaseController
 	     
 	    //если ошибок нет
 	        if (empty($error)){
-				$id_article = $mArticle->add($title, $content);
+				$id_article = $mArticle->add(['title' => "$title", 'content' => "$content"]);
 
 				if ($id_article){
 					header ("Location: article?id=$id_article");
@@ -113,7 +108,7 @@ class ArticleController extends BaseController
 
         //если ошибок нет
             if (empty($error)){
-                 if($mArticle->edit($id_article, $title, $content)){
+                 if($mArticle->edit($id_article,['title' => "$title", 'content' => "$content"])){
                     header ("Location: article?id=$id_article");
                     exit();
                  } else {                  
@@ -132,16 +127,13 @@ class ArticleController extends BaseController
             $content = $article['content'];
         }
 
-    
-
-    $this->content = Tmp::generate('Views/v_edit.php',[
+    	$this->content = Tmp::generate('Views/v_edit.php',[
                         'id_article' => $id_article, 
                         'title' => $title, 
                         'content' => $content,  
                         'error' => $error,  
                         'message' => $message
                 ]);
-
 	}
 
 	public function deleteAction()
@@ -160,10 +152,7 @@ class ArticleController extends BaseController
 
         $this->content = Tmp::generate('Views/v_delete.php',[
                         'message' => $message
-
-                ]);
-
-        
+                ]);      
 	}
 
 }

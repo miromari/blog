@@ -29,15 +29,9 @@ class UsersController extends BaseController
 	                setcookie('password', md5($password), time() + 3600 * 24 * 7);
 	            } 
 
-	    // Проверяем, что есть отметка, откуда мы пришли и перенаправляем туда
-	            if (isset($_SESSION['back'])){
-	                $back = $_SESSION['back'];
-	                header("Location: $back");  
-	            }
-	            // если отметки нет, отправляем на главную страницу
-	            else{
-	                header('Location: /');   
-	            }
+	    		// Проверяем, что есть отметка, откуда мы пришли и перенаправляем туда, а если  нет, отправляем на главную страницу
+	      		$location = isset($_SESSION['back']) ? $_SESSION['back'] : '/';
+	            header("Location: $location");   
 	            exit();
 	        }
 		 }

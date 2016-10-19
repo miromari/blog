@@ -15,13 +15,11 @@
     <div class="menu">
       <ul>
         <li><a href="/">На главную</a></li>
-        <li><a href="/add">Добавить новость</a></li>
-
-       <!--  <?if($auth):?>
+        <?if($auth):?>
          <li><a href="/add">Добавить новость</a></li>
-        <?endif?> -->
+        <?endif?>
         
-        <!-- <li><a href="\login"><?=($auth ? 'Выйти':'Войти')?></a></li> -->
+        <li><a href="\login"><?=($auth ? 'Выйти':'Войти')?></a></li>
       </ul>
     </div>
   </div>
