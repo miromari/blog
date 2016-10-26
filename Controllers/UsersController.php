@@ -2,55 +2,70 @@
 
 namespace Controllers;
 
-use Core\Tmp;
+use Core\Validator;
 use Model\UsersModel;
+
 
 class UsersController extends BaseController
 {
 	public function loginAction()
 	{
-		$login = '';
-    	$password = '';
-    
+		$location = isset($_SESSION['back']) ? $_SESSION['back'] : '/';
 
-		if(count($this->request->getPost()) > 0){
-        
-       	$login = trim($this->request->getPost()['login']);
-       	$password = trim($this->request->getPost()['password']);
+		if ($this->auth){
+			$this->getRedirect($location);
 
+		}
+		$validator = new Validator();
+		$validator->loadRules('login_form');  
 
-	        if($login == 'admin' && $password == 'qwerty'){
+		if($this->request->isPost()){
+             		
+       		$validator->loadRules('login_form')->run($this->request->getPost());
 
-	            $_SESSION['auth'] = true;
+       		if ($validator->isValid){
 
-	            // если стоит галочка                       
-	            if (isset( $this->request->getPost()['remember'])){
-	                setcookie('login', $login, time() + 3600 * 24 * 7);
-	                setcookie('password', md5($password), time() + 3600 * 24 * 7);
-	            } 
+		        if($validator->fields['login'] == 'admin' && $validator->fields['password'] == 'qwerty'){
 
-	    		// Проверяем, что есть отметка, откуда мы пришли и перенаправляем туда, а если  нет, отправляем на главную страницу
-	      		$location = isset($_SESSION['back']) ? $_SESSION['back'] : '/';
-	            header("Location: $location");   
-	            exit();
-	        }
+		            $_SESSION['auth'] = true;
+
+		            // если стоит галочка                       
+		            if (isset( $this->request->getPost()['remember'])){
+		                setcookie('login', $validator->fields['login'], time() + 3600 * 24 * 7);
+		                setcookie('password', md5($validator->fields['password']), time() + 3600 * 24 * 7);
+		            } 
+
+					$this->getRedirect($location);
+		        }
+		    }    
 		 }
-	    else{
 
-	        unset($_SESSION['auth']);
-	        setcookie('login', '', time()-1);
-	        setcookie('password', '', time()-1);
+		$this->content = $this->tmpGenerate('Views/v_login.php', [
+	  					'login' => $validator->fields['login'], 
+                        'password' => $validator->fields['password'],
+                        'errors' => $validator->errors 
+						]); 
 
-	        // Если мы пришли на логин с нуля - удаляем старую отметку back
-	         if (!isset($this->request->getServer()['HTTP_REFERER'])){
-	            unset($_SESSION['back']);
-	        }
+	}	 
+    
+    public function logoutAction()
+    {
 
-	    }
+        unset($_SESSION['auth']);
+       	$this->auth = false;
 
-		$this->content = Tmp::generate('Views/v_login.php', [
-			  					'login' => $login, 
-		                        'password' => $password
-								]);
-	}
+        setcookie('login', '', time()-1);
+        setcookie('password', '', time()-1);
+
+        // Если мы пришли на логин с нуля - удаляем старую отметку back
+         if (!isset($this->request->getServer()['HTTP_REFERER'])){
+            unset($_SESSION['back']);
+        }
+
+        $this->getRedirect('/');
+
+    }
+
+
+	
 }

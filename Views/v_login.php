@@ -1,4 +1,11 @@
 <form method="post">
+	<? if (!empty($errors)):?>
+		<div class="error">
+			<?foreach($errors as $field => $text): ?>
+				<p><?=$field?>:<?$text?></p>
+			<?endforeach?>
+		</div>
+	<?endif?>
 	Логин<br>
 	<input type="text" name="login" value = "<?=$login?>"><br>
 	Пароль<br>

@@ -5,16 +5,21 @@ namespace Core;
 class App
 {
 	private $request;
+	private $routs;
 
 	public function __construct(Request $request)
 	{
 		$this->request = $request;
+		$this->routs = include_once ROOT . '/Core/Configs/RoutingMap.php';
 	}
 
 	public function go()
 	{
 		$params = $this->getRoutByRequest();
 
+		// echo '<pre>';
+		// var_dump($params);
+		// die;
 
 		if(!$params){
 			$params = $this->getRoutByParams('default');
@@ -34,44 +39,44 @@ class App
 
 	private function getRoutByRequest()
 	{
-		return isset($this->routs()[$this->request->rout]) ? $this->routs()[$this->request->rout] : false;
+		$routKit = explode('/', $this->request->rout);
+		$routParams = false;
+		
+		foreach ($routKit as $num => $item){
+			if (is_numeric($item)){
+				$routParams = $item;
+				$item = 'int';
+			}
+
+			$routKit[$num] = $item;
+		}
+
+		if(!$routParams){
+			return isset($this->routs[$this->request->rout]) ? ($this->routs[$this->request->rout]) : false;
+		}
+
+		$routPattern = implode('/', $routKit);
+		$routPatterns = [];
+
+		foreach ($this->routs as $key => $value){
+			if (stripos($key, 'int')){
+				$routPatterns[] = $key;  
+			}
+		}
+
+		if (!in_array($routPattern, $routPatterns)){
+			return false;
+		}
+
+		$params = $this->routs[$routPattern];
+		$this->request->setGet($params['params']['int'],$routParams);
+		return $params;
+
 	}
 	private function getRoutByParams($rout)
 	{
-		return isset($this->routs()[$rout]) ? $this->routs()[$rout] : false;
+		return isset($this->routs[$rout]) ? $this->routs[$rout] : false;
 	}
 
-	public function routs()
-	{
-		return [
-			'/'=> [
-				'controller' => 'Controllers\ArticleController',
-				'action' => 'indexAction',
-			],
-			'/article'=> [
-				'controller' => 'Controllers\ArticleController',
-				'action' => 'oneAction',
-			],
-			'/add'=> [
-				'controller' => 'Controllers\ArticleController',
-				'action' => 'addAction',
-			],
-			'/edit'=> [
-				'controller' => 'Controllers\ArticleController',
-				'action' => 'editAction',
-			],			
-			'/delete'=> [
-				'controller' => 'Controllers\ArticleController',
-				'action' => 'deleteAction',
-			],			
-			'default'=> [
-				'controller' => 'Controllers\BaseController',
-				'action' => 'get404',
-			],
-			'/login'=> [
-				'controller' => 'Controllers\UsersController',
-				'action' => 'loginAction',
-			],
-		];
-	}
+	
 }

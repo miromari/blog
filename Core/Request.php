@@ -36,6 +36,11 @@ class Request
 		return $this->server['REQUEST_METHOD'];
 	}
 
+	public function setGet($name, $value)
+	{
+		$this->get[$name] = $value;
+	}
+
 	public function getGet()
 	{
 		return $this->get;

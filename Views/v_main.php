@@ -3,7 +3,7 @@
 <head>
 <title><?=$title?></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<link href="Views/style.css" rel="stylesheet" type="text/css" />
+<link href="/Views/style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div id="container">
@@ -16,10 +16,16 @@
       <ul>
         <li><a href="/">На главную</a></li>
         <?if($auth):?>
-         <li><a href="/add">Добавить новость</a></li>
+         <li><a href="/article/add">Добавить новость</a></li>
         <?endif?>
         
-        <li><a href="\login"><?=($auth ? 'Выйти':'Войти')?></a></li>
+        <li>
+        <?if(!$auth):?>
+          <a href="/login">Войти</a>
+        <?else:?>
+          <a href="/logout">Выйти</a>
+        <?endif?> 
+        </li>
       </ul>
     </div>
   </div>

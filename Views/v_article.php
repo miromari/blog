@@ -2,6 +2,6 @@
 <p> <?=$content?></p><hr>
 
 <?if($auth):?>
-<a href = "edit?id=<?=$id_article?>">Редактировать</a>
+<a href = "/article/edit/<?=$id_article?>">Редактировать</a>
 <?endif?>
 

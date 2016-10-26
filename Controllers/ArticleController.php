@@ -2,7 +2,6 @@
 
 namespace Controllers;
 
-use Core\Tmp;
 use Models\ArticleModel;
 
 class ArticleController extends BaseController
@@ -16,7 +15,7 @@ class ArticleController extends BaseController
 	        $content = 'Возникла ошибка!';
 	    } else {
 
-	    	$this->content = Tmp::generate('Views/v_index.php',[
+	    	$this->content = $this->tmpGenerate('Views/v_index.php',[
 	                        'articles' => $articles         
 	     ]);
 		}
@@ -38,7 +37,7 @@ class ArticleController extends BaseController
 			$this->get404(); 
         }
 
-	    $this->content = Tmp::generate('Views/v_article.php',[
+	    $this->content = $this->tmpGenerate('Views/v_article.php',[
                         'id_article' => $id_article, 
                         'title' => $article['title'], 
                         'content' => $article['content'],
@@ -53,7 +52,7 @@ class ArticleController extends BaseController
 	    $content = '';
 	   	$message = '';
 
-	    if(count($this->request->getPost()) > 0){
+	    if($this->request->isPost()){
 
 	    //Обработка полей
 	        $title = trim (htmlspecialchars ($this->request->getPost()['title']));
@@ -69,15 +68,14 @@ class ArticleController extends BaseController
 				$id_article = $mArticle->add(['title' => "$title", 'content' => "$content"]);
 
 				if ($id_article){
-					header ("Location: article?id=$id_article");
-					exit();
+					$this->getRedirect("/article/$id_article");
 				} else {
 					$message = 'Произошла ошибка!';
 				}
 	        }
 	    }
 	        
-	    $this->content = Tmp::generate('Views/v_add.php',[
+	    $this->content = $this->tmpGenerate('Views/v_add.php',[
 	                        'title' => $title, 
 	                        'content' => $content,
 	                        'error' => $error,  
@@ -109,8 +107,8 @@ class ArticleController extends BaseController
         //если ошибок нет
             if (empty($error)){
                  if($mArticle->edit($id_article,['title' => "$title", 'content' => "$content"])){
-                    header ("Location: article?id=$id_article");
-                    exit();
+                    $this->getRedirect("/article/$id_article");
+
                  } else {                  
                     $message = 'Произошла ошибка!';  
                 }
@@ -127,7 +125,7 @@ class ArticleController extends BaseController
             $content = $article['content'];
         }
 
-    	$this->content = Tmp::generate('Views/v_edit.php',[
+    	$this->content = $this->tmpGenerate('Views/v_edit.php',[
                         'id_article' => $id_article, 
                         'title' => $title, 
                         'content' => $content,  
@@ -146,11 +144,12 @@ class ArticleController extends BaseController
             ArticleModel::Instance()->delete($id_article)){
 
             $message = 'Статья успешно удалена'; 
+
         } else {
         	$message ='Произошла ошибка';
         }
 
-        $this->content = Tmp::generate('Views/v_delete.php',[
+        $this->content = $this->tmpGenerate('Views/v_delete.php',[
                         'message' => $message
                 ]);      
 	}
