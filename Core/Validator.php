@@ -34,23 +34,36 @@ class Validator
 		$this->extractFields($post);
 
 		$rules = $this->rules['rules'];
+	
 		foreach ($rules as $k => $rule){
 			if ($k === 'not_empty'){
 				foreach($this->fields as $name => $value){
 					if (in_array($name, $rule)){
 						if($value === '' || $value === null){
-							$this->errors[$name] = 'not be empty';
+							$this->errors[$name] = 'Поле не должно быть пустым';
 						}
 					} 
 				}
 			}
 
-			if ($k == 'max_length'){
+			if ($k === 'min_length'){
+				foreach ($this->fields as $name => $value){
+					if (isset($rule[$name]) && mb_strlen($value) > 0 && mb_strlen($value) < $rule[$name][0]){	
+						$this->errors[$name] = 'Поле должно содержать более ' . $rule[$name][0] . ' символов' ;
+					}
+				}
+			}
 
+			if ($k === 'max_length'){
+				foreach ($this->fields as $name => $value){
+					if (isset($rule[$name]) && mb_strlen($value) > $rule[$name][0]){
+						$this->errors[$name] = 'Поле не должно превышать ' . $rule[$name][0] . ' символов';
+					}
+				}
 			}
 		}
 
-		if (!empty($this->error)){
+		if (!empty($this->errors)){
 			$this->isValid = false;
 		}
 

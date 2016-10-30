@@ -14,14 +14,14 @@ class UsersController extends BaseController
 
 		if ($this->auth){
 			$this->getRedirect($location);
-
 		}
+
 		$validator = new Validator();
 		$validator->loadRules('login_form');  
 
 		if($this->request->isPost()){
              		
-       		$validator->loadRules('login_form')->run($this->request->getPost());
+       		$validator->run($this->request->getPost());
 
        		if ($validator->isValid){
 
