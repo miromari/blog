@@ -10,4 +10,11 @@ session_start();
 
 $app = new Core\App(new Core\Request($_GET,$_POST,$_SERVER));
 
-$app->go();  
+try{
+	$app->go();  	
+}
+catch(Exception $e){
+
+echo '<pre>';
+var_dump($e);
+}
