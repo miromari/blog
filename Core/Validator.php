@@ -40,7 +40,8 @@ class Validator
 				foreach($this->fields as $name => $value){
 					if (in_array($name, $rule)){
 						if($value === '' || $value === null){
-							$this->errors[$name] = 'Поле не должно быть пустым';
+							// $this->errors[$name] = 'Поле не должно быть пустым';
+							throw new \Exception ('Поле не должно быть пустым');
 						}
 					} 
 				}
