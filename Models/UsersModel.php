@@ -5,22 +5,39 @@ namespace Models;
 class UsersModel extends BaseModel
 
 {
-	// Проверка авторизации
-	public static function isAuth()
-	{
-	   
-	    if (!isset($_SESSION['auth'])){
-	        
-	        if (isset($_COOKIE['login']) && isset ($_COOKIE['password']) && $_COOKIE['login'] == 'admin' && $_COOKIE['password'] == md5('qwerty')){
-	            $_SESSION['auth'] = true;
-	            }
+	
+	public static $instance;
 
-	        else {
-	            return false;
-	            }
-	        }
-	    return true;
-	}
+    public static function Instance()
+    {
+        if (self::$instance == null){
+            self::$instance = new ArticleModel();
+        }
+
+        return self::$instance;
+    }
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->table = 'users';
+        $this->pk = 'id_user';
+    }
+
+
+    public function GetByLogin($login)
+    {
+    	// !!!!Защита от sql-инъекции
+
+    	$res  = $this->pdo->query( "SELECT * FROM {$this->table} WHERE login = '$login'");
+         
+        return $res ? $res[0] : false;
+    }
+
+
+
+	
 }
 	
 

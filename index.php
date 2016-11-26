@@ -1,6 +1,7 @@
 <?php
 
 include_once 'settings.php';
+
 function __autoload($classname)
 {
     include_once str_replace("\\", DIRECTORY_SEPARATOR, $classname) . '.php';

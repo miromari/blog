@@ -3,13 +3,15 @@
 namespace Controllers;
 
 use Core\Validator;
+use Core\Users;
 use Model\UsersModel;
 
 
 class UsersController extends BaseController
 {
-	public function loginAction()
+	public function loginAction($login, $password, $remember = true)
 	{
+
 		$location = isset($_SESSION['back']) ? $_SESSION['back'] : '/';
 
 		if ($this->auth){
@@ -24,6 +26,8 @@ class UsersController extends BaseController
        		$validator->run($this->request->getPost());
 
        		if ($validator->isValid){
+
+		        if ()
 
 		        if($validator->fields['login'] == 'admin' && $validator->fields['password'] == 'qwerty'){
 
