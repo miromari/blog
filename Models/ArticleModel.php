@@ -26,35 +26,35 @@ class ArticleModel extends BaseModel
     }
 
     //Валидация полей, поиск ошибок
-    public function validate($title, $content)
+    // public function validate($title, $content)
 
-    {
-        $error = [];
+    // {
+    //     $error = [];
 
-        if ($title == ''){
-            $error['title'] = 'Поле не должно быть пустым!';
-        }
-        elseif (mb_strlen($title) < 5){
-            $error['title']  = 'Слишком короткое название!';
-        }
+    //     if ($title == ''){
+    //         $error['title'] = 'Поле не должно быть пустым!';
+    //     }
+    //     elseif (mb_strlen($title) < 5){
+    //         $error['title']  = 'Слишком короткое название!';
+    //     }
 
-        elseif (mb_strlen($title) > 150){
-             $error['title'] = 'Название не должно превышать 150 символов!';
-        }
+    //     elseif (mb_strlen($title) > 150){
+    //          $error['title'] = 'Название не должно превышать 150 символов!';
+    //     }
 
-        if ($content == '' ){
-            $error['content'] = 'Поле не должно быть пустым!';
-        }
-        elseif (mb_strlen($content) < 10){
-            $error['content']  = 'Минимальная длина текста - 100 символов!';
-        }
+    //     if ($content == '' ){
+    //         $error['content'] = 'Поле не должно быть пустым!';
+    //     }
+    //     elseif (mb_strlen($content) < 10){
+    //         $error['content']  = 'Минимальная длина текста - 100 символов!';
+    //     }
 
-        elseif (mb_strlen($content) > 65535){
-             $error['content'] = 'Текст не должен превышать 65535 символов!';
-        }
+    //     elseif (mb_strlen($content) > 65535){
+    //          $error['content'] = 'Текст не должен превышать 65535 символов!';
+    //     }
         
-        return $error;
-    }
+    //     return $error;
+    // }
 }
 
 

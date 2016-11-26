@@ -17,13 +17,12 @@ class App
 	{
 		$params = $this->getRoutByRequest();
 
-		// echo '<pre>';
-		// var_dump($params);
-		// die;
+		
 
 		if(!$params){
 			$params = $this->getRoutByParams('default');
 		}
+
 		$ctrl = new $params['controller']($this->request);
 
  		if ($this->request->rout != '/login'){
@@ -31,6 +30,7 @@ class App
 		}
 
 		$action = $params['action'];
+	
 		$ctrl->$action();
 
  		$ctrl->render(); 

@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Core\Validator;
 use Models\ArticleModel;
 
 class ArticleController extends BaseController
@@ -47,25 +48,26 @@ class ArticleController extends BaseController
 
 	public function addAction()
 	{
-		$error = [];
-	    $title = '';
-	    $content = '';
+
 	   	$message = '';
 
+	    $validator = new Validator();
+	    $validator->loadRules('article_form');
+
+
+
 	    if($this->request->isPost()){
-
-	    //Обработка полей
-	        $title = trim (htmlspecialchars ($this->request->getPost()['title']));
-	        $content = trim (htmlspecialchars ($this->request->getPost()['content']));
-
-
+	    
 	    //Валидация полей
-	        $mArticle = ArticleModel::Instance();
-	        $error = $mArticle->validate($title, $content);
+	        $validator->run($this->request->getPost());
 	     
 	    //если ошибок нет
-	        if (empty($error)){
-				$id_article = $mArticle->add(['title' => "$title", 'content' => "$content"]);
+	        if ($validator->isValid){
+
+				$id_article = ArticleModel::Instance()->add([
+					'title' => $validator->fields['title'],
+					'content' => $validator->fields['content']
+					]);
 
 				if ($id_article){
 					$this->getRedirect("/article/$id_article");
@@ -76,9 +78,9 @@ class ArticleController extends BaseController
 	    }
 	        
 	    $this->content = $this->tmpGenerate('Views/v_add.php',[
-	                        'title' => $title, 
-	                        'content' => $content,
-	                        'error' => $error,  
+	                        'title' => $validator->fields['title'], 
+	                        'content' => $validator->fields['content'],
+	                        'errors' => $validator->errors,  
 	                        'message' => $message
 	                ]);
 	}
@@ -87,50 +89,50 @@ class ArticleController extends BaseController
 	public function editAction()
 	{
 		$id_article = (int)$this->request->getGet()['id'];
-	    $error = [];
-	    $message = '';
-	   	$title = '';
+	    $title = '';
 	    $content = '';
 
 	    $mArticle = ArticleModel::Instance();
-	 
-	        //если нажали кнопку "Сохранить"
+
+	    $validator = new Validator();
+
+	    //если нажали кнопку "Сохранить"
         if (isset($this->request->getPost()['save'])) {
 
-            //Обработка полей
-            $title = trim (htmlspecialchars ($this->request->getPost()['title']));
-            $content = trim (htmlspecialchars ($this->request->getPost()['content']));
+	        //Валидация полей
+	        $validator->loadRules('article_form')->run($this->request->getPost());
 
-        //Валидация полей
-            $error = $mArticle->validate($title, $content);
+		    // Создание полей
+	    	$title = $validator->fields['title'];
+	    	$content = $validator->fields['content'];
 
-        //если ошибок нет
-            if (empty($error)){
-                 if($mArticle->edit($id_article,['title' => "$title", 'content' => "$content"])){
+			//если ошибок нет
+	        if ($validator->isValid && $mArticle->edit($id_article,[
+								    					'title' => $title,
+														'content' => $content
+										                 	 ])){
                     $this->getRedirect("/article/$id_article");
-
-                 } else {                  
-                    $message = 'Произошла ошибка!';  
-                }
-            }
+        	}
+        //если пришли через GET
         } else { 
 
             $article = $mArticle->get($id_article);
 
             //Если статьи не существует
             if(empty($article)){
-                $message = 'Такой статьи не существует';
-            }          
-            $title = $article['title'];
-            $content = $article['content'];
+				$this->get404(); 
+            } 
+
+			$title = $article['title'];
+			$content = $article['content'];        
+            
         }
 
     	$this->content = $this->tmpGenerate('Views/v_edit.php',[
                         'id_article' => $id_article, 
                         'title' => $title, 
                         'content' => $content,  
-                        'error' => $error,  
-                        'message' => $message
+	                    'errors' => $validator->errors,  
                 ]);
 	}
 

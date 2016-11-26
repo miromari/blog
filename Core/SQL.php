@@ -19,13 +19,15 @@ class SQL
 	private function __construct()
 	{
 		setlocale (LC_ALL, 'ru_RU.UTF8');
-		$this->db = new \PDO('mysql:host=localhost;dbname=php1', 'root', 'root');
+		$this->db = new \PDO(DBMS . ':host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASS);
 		$this->db->exec("SET NAMES UTF8");
 		$this->db->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
+
 	}
 
 	public function query($query)
 	{
+
 		$q = $this->db->prepare($query);
 		$q->execute();
 
