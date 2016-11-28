@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns='http://www.w3.org/2005/Atom' xmlns:openSearch='http://a9.com/-/spec/opensearchrss/1.0/'
+      xmlns:gsx='http://schemas.google.com/spreadsheets/2006/extended'>
+    <id>https://spreadsheets.google.com/feeds/list/someId3/od6/private/full</id>
+    <updated>2013-09-10T19:20:34.991Z</updated>
+    <category scheme='http://schemas.google.com/spreadsheets/2006'
+              term='http://schemas.google.com/spreadsheets/2006#list'/>
+    <title type='text'>Tabellenblatt1</title>
+    <link rel='alternate' type='text/html' href='https://spreadsheets.google.com/ccc?key=someId3'/>
+    <link rel='http://schemas.google.com/g/2005#feed' type='application/atom+xml'
+          href='https://spreadsheets.google.com/feeds/list/someId3/od6/private/full'/>
+    <link rel='http://schemas.google.com/g/2005#post' type='application/atom+xml'
+          href='https://spreadsheets.google.com/feeds/list/someId3/od6/private/full'/>
+    <link rel='self' type='application/atom+xml'
+          href='https://spreadsheets.google.com/feeds/list/someId3/od6/private/full'/>
+    <author>
+        <name>mike</name>
+        <email>mike@wunderdata.com</email>
+    </author>
+    <openSearch:totalResults>2</openSearch:totalResults>
+    <openSearch:startIndex>1</openSearch:startIndex>
+    <entry>
+        <id>https://spreadsheets.google.com/feeds/list/someId3/od6/private/full/cokwr</id>
+        <updated>2013-09-10T19:20:34.991Z</updated>
+        <category scheme='http://schemas.google.com/spreadsheets/2006'
+                  term='http://schemas.google.com/spreadsheets/2006#list'/>
+        <title type='text'>Mike</title>
+        <content type='text'>age: 26, location: Berlin</content>
+        <link rel='self' type='application/atom+xml'
+              href='https://spreadsheets.google.com/feeds/list/someId3/od6/private/full/cokwr'/>
+        <link rel='edit' type='application/atom+xml'
+              href='https://spreadsheets.google.com/feeds/list/someId3/od6/private/full/cokwr/130b73ke8dfpp1'/>
+        <gsx:name>Mike</gsx:name>
+        <gsx:age>26</gsx:age>
+        <gsx:location>Berlin</gsx:location>
+    </entry>
+    <entry>
+        <id>https://spreadsheets.google.com/feeds/list/someId3/od6/private/full/cpzh4</id>
+        <updated>2013-09-10T19:20:34.991Z</updated>
+        <category scheme='http://schemas.google.com/spreadsheets/2006'
+                  term='http://schemas.google.com/spreadsheets/2006#list'/>
+        <title type='text'>Tom</title>
+        <content type='text'>age: 29, location: New York</content>
+        <link rel='self' type='application/atom+xml'
+              href='https://spreadsheets.google.com/feeds/list/someId3/od6/private/full/cpzh4'/>
+        <link rel='edit' type='application/atom+xml'
+              href='https://spreadsheets.google.com/feeds/list/someId3/od6/private/full/cpzh4/23hdm6f09fej4o'/>
+        <gsx:name>Tom</gsx:name>
+        <gsx:age>29</gsx:age>
+        <gsx:location>New York</gsx:location>
+    </entry>
+</feed>

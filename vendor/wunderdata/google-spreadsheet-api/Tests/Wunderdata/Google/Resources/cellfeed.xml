@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns='http://www.w3.org/2005/Atom' xmlns:openSearch='http://a9.com/-/spec/opensearchrss/1.0/'
+      xmlns:gs='http://schemas.google.com/spreadsheets/2006' xmlns:batch='http://schemas.google.com/gdata/batch'>
+    <id>https://spreadsheets.google.com/feeds/cells/someId1/od6/private/full</id>
+    <updated>2013-09-09T15:26:15.362Z</updated>
+    <category scheme='http://schemas.google.com/spreadsheets/2006'
+              term='http://schemas.google.com/spreadsheets/2006#cell'/>
+    <title type='text'>Tabellenblatt1</title>
+    <link rel='alternate' type='text/html' href='https://spreadsheets.google.com/ccc?key=someId1'/>
+    <link rel='http://schemas.google.com/g/2005#feed' type='application/atom+xml'
+          href='https://spreadsheets.google.com/feeds/cells/someId1/od6/private/full'/>
+    <link rel='http://schemas.google.com/g/2005#post' type='application/atom+xml'
+          href='https://spreadsheets.google.com/feeds/cells/someId1/od6/private/full'/>
+    <link rel='http://schemas.google.com/g/2005#batch' type='application/atom+xml'
+          href='https://spreadsheets.google.com/feeds/cells/someId1/od6/private/full/batch'/>
+    <link rel='self' type='application/atom+xml'
+          href='https://spreadsheets.google.com/feeds/cells/someId1/od6/private/full'/>
+    <author>
+        <name>mike</name>
+        <email>mike@wunderdata.com</email>
+    </author>
+    <openSearch:totalResults>4</openSearch:totalResults>
+    <openSearch:startIndex>1</openSearch:startIndex>
+    <gs:rowCount>2</gs:rowCount>
+    <gs:colCount>2</gs:colCount>
+    <entry>
+        <id>https://spreadsheets.google.com/feeds/cells/someId1/od6/private/full/R1C1</id>
+        <updated>2013-09-09T15:26:15.362Z</updated>
+        <category scheme='http://schemas.google.com/spreadsheets/2006'
+                  term='http://schemas.google.com/spreadsheets/2006#cell'/>
+        <title type='text'>A1</title>
+        <content type='text'>Cell A1</content>
+        <link rel='self' type='application/atom+xml'
+              href='https://spreadsheets.google.com/feeds/cells/someId1/od6/private/full/R1C1'/>
+        <link rel='edit' type='application/atom+xml'
+              href='https://spreadsheets.google.com/feeds/cells/someId1/od6/private/full/R1C1/wjz38b'/>
+        <gs:cell row='1' col='1' inputValue='Cell A1'>
+            Cell A1
+        </gs:cell>
+    </entry>
+    <entry>
+        <id>https://spreadsheets.google.com/feeds/cells/someId1/od6/private/full/R1C2</id>
+        <updated>2013-09-09T15:26:15.362Z</updated>
+        <category scheme='http://schemas.google.com/spreadsheets/2006'
+                  term='http://schemas.google.com/spreadsheets/2006#cell'/>
+        <title type='text'>B1</title>
+        <content type='text'>Cell B1</content>
+        <link rel='self' type='application/atom+xml'
+              href='https://spreadsheets.google.com/feeds/cells/someId1/od6/private/full/R1C2'/>
+        <link rel='edit' type='application/atom+xml'
+              href='https://spreadsheets.google.com/feeds/cells/someId1/od6/private/full/R1C2/1c108k'/>
+        <gs:cell row='1' col='2' inputValue='Cell B1'>Cell B1</gs:cell>
+    </entry>
+    <entry>
+        <id>https://spreadsheets.google.com/feeds/cells/someId1/od6/private/full/R2C1</id>
+        <updated>2013-09-09T15:26:15.362Z</updated>
+        <category scheme='http://schemas.google.com/spreadsheets/2006'
+                  term='http://schemas.google.com/spreadsheets/2006#cell'/>
+        <title type='text'>A2</title>
+        <content type='text'>Cell A2</content>
+        <link rel='self' type='application/atom+xml'
+              href='https://spreadsheets.google.com/feeds/cells/someId1/od6/private/full/R2C1'/>
+        <link rel='edit' type='application/atom+xml'
+              href='https://spreadsheets.google.com/feeds/cells/someId1/od6/private/full/R2C1/9qaemf'/>
+        <gs:cell row='2' col='1' inputValue='Cell A2'>Cell A2</gs:cell>
+    </entry>
+    <entry>
+        <id>https://spreadsheets.google.com/feeds/cells/someId1/od6/private/full/R2C2</id>
+        <updated>2013-09-09T15:26:15.362Z</updated>
+        <category scheme='http://schemas.google.com/spreadsheets/2006'
+                  term='http://schemas.google.com/spreadsheets/2006#cell'/>
+        <title type='text'>B2</title>
+        <content type='text'>Cell B2</content>
+        <link rel='self' type='application/atom+xml'
+              href='https://spreadsheets.google.com/feeds/cells/someId1/od6/private/full/R2C2'/>
+        <link rel='edit' type='application/atom+xml'
+              href='https://spreadsheets.google.com/feeds/cells/someId1/od6/private/full/R2C2/bseiq'/>
+        <gs:cell row='2' col='2' inputValue='Cell B2'>Cell B2</gs:cell>
+    </entry>
+</feed>
